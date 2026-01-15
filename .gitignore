@@ -1,0 +1,44 @@
+# --- Dependencies ---
+node_modules/
+.pnpm-store/
+
+# --- Build Output (TypeScript) ---
+dist/
+build/
+*.tsbuildinfo
+
+# --- Environment & Secrets (CRITICAL) ---
+# 绝不能提交你的 API Key 和富途账户密码
+.env
+.env.local
+.env.*.local
+
+# --- OS System Files (Mac) ---
+.DS_Store
+.AppleDouble
+.LSOverride
+
+# --- IDE & Editors ---
+.vscode/launch.json          # 只忽略特定文件
+.vscode/*.code-workspace     # 只忽略工作区文件
+.vscode/.history/            # 只忽略历史记录
+.idea/
+*.swp
+*.swo
+
+# Cursor specific (Optional: keep rules, ignore chat history/cache)
+.cursor/
+# 但我们要保留 .cursorrules，所以不要忽略它
+# 通常 .cursor 文件夹里放的是一些编辑器的临时状态，建议忽略
+# 除非你使用了 Cursor 的 Composer 项目级 Checkpoints
+
+# --- Logs ---
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+logs/
+*.log
+
+# --- Testing ---
+coverage/

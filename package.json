@@ -1,0 +1,30 @@
+{
+  "name": "quant-sentinel",
+  "version": "0.1.0",
+  "description": "",
+  "main": "",
+  "type": "module",
+  "scripts": {
+    "dev": "tsx watch src/index.ts",
+    "build": "tsc",
+    "start": "node dist/index.js",
+    "type-check": "tsc --noEmit",
+    "clean": "rm -rf dist"
+  },
+  "keywords": [
+    "quant",
+    "trading",
+    "kline",
+    "macd",
+    "technical-analysis"
+  ],
+  "author": "Jeffyqwang <jefferyol@foxmail.com>",
+  "license": "MIT",
+  "packageManager": "pnpm@10.28.0",
+  "devDependencies": {
+    "@types/node": "^25.0.6",
+    "prettier": "^3.8.0",
+    "tsx": "^4.21.0",
+    "typescript": "^5.9.3"
+  }
+}

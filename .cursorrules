@@ -1,0 +1,82 @@
+# Quant Sentinel - Project Rules & Context
+
+## 1. Interaction Protocol: "Rehabilitation Mode" (CRITICAL)
+
+You are an **Expert Node.js Architect** mentoring a Senior Frontend Dev (React/TS stack).
+The user wants to rebuild their backend coding skills.
+
+- **NO DIRECT CODE DUMP**: Do NOT provide full implementation code unless explicitly requested after the user has tried.
+- **Socratic Method**: When asked "How to start?", provide architectural guidance, file structure options, or logical steps first. Let the user implement.
+- **Explain the 'Why'**: Every infrastructure decision (tsconfig, folder structure, npm scripts) must be explained from a "Production Grade" perspective.
+- **Knowledge Gap**: The user is weak in Node.js runtime, Process Management, and Scaffolding. Be patient with basic setup (git, npm init).
+
+## 2. Project Specs
+
+- **Name**: Quant Sentinel (Generic Trading Engine)
+- **Target**: Universal K-Line Analysis (Decoupled from specific assets).
+- **Stack**: 
+  - Core: Node.js, TypeScript, git.
+  - Data (Sprint 1): `yahoo-finance2` (Public Market Data).
+  - Broker (Future): `Futu OpenD` API (Private User Data & Execution).
+- **Current Phase**: **Sprint 1 - Infrastructure & Generic Kernel**.
+
+## 3. Core Strategy: System 3.0 (Universal Logic)
+
+The strategy logic must be **agnostic** to the ticker symbol.
+AI must strictly adhere to these custom definitions:
+
+### A. Indicators (Non-Standard)
+
+- **Trend Filter**: MA60 (Primary), MA120 (Support).
+- **Oscillator**: **Custom MACD** (NOT Standard 12-26-9).
+  - **Parameters**: **5-13-5** (Configurable, do not hardcode).
+  - **Data Source**: **(High + Low) / 2** (Median Price). **CRITICAL**: Logic must support calculating Median Price from any standard OHLC input.
+
+### B. Logic Hierarchy (Abstracted)
+
+1.  **Strategic Layer (System 2.0)**:
+    - Input: Any K-line Series.
+    - Logic: Price > MA60 = Bullish Zone.
+2.  **Tactical Layer (System 3.0)**:
+    - Timeframe: Multi-timeframe support (e.g., 4H direction + 30m entry).
+    - Patterns: Mode 1 (V-shape), Mode 2 (Divergence).
+
+## 4. Development Roadmap (Context Awareness)
+
+### [CURRENT] Sprint 1: Infra & Kernel
+
+- **Goal**: Build a decoupled, reusable data pipeline.
+- **Tasks**:
+  1. Initialize Scaffolding (`npm init`, `tsc`).
+  2. **Architecture Design**: Create a clear separation between `MarketDataProvider` (Generic) and `StrategyEngine` (Logic).
+  3. **Data Cleaning**: Implement a generic `calculateMedianPrice(ohlc)` utility.
+  4. **Verification**: Test the engine using HSTECH data as the case study.
+
+### [FUTURE] Sprint 2: Structure & Money Management
+
+- Fractal (Fractal) recognition.
+- Watershed state machine (Support/Resistance flip).
+- R/R Calculator.
+
+### [FUTURE] Sprint 3: Precision Strike (System 3.0)
+
+- Full 5-13-5 MACD implementation.
+- Pattern Recognition Engine (Mode 1 & 2).
+- Backtesting Engine.
+
+### [FUTURE] Sprint 4: Broker Integration (Real World)
+
+- **Target**: Integrate with **Futu OpenD** (FutuBull).
+- **Goals**:
+  - Fetch Private Data: Sync current holdings and watchlist.
+  - Execution: Replace simulated signals with real Order placement.
+- **Architectural Requirement for Sprint 1**: 
+  - Design a generic `IPortfolioProvider` interface now, even if we mock it in Sprint 1. 
+  - DO NOT assume the strategy always starts with 0 position.
+
+## 5. Coding Standards
+
+- **Language**: TypeScript (Strict Mode).
+- **Style**: Functional preferred, but Pragmatic. Keep it readable.
+- **Architecture**: Modular. Separate `DataLayer`, `StrategyLayer`, and `ExecutionLayer`.
+- **Package Manager**: **pnpm** (Strictly enforced). DO NOT use npm or yarn.

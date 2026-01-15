@@ -1,0 +1,9 @@
+node_modules
+dist
+build
+*.log
+coverage
+pnpm-lock.yaml
+tsconfig.json
+package.json
+.git
