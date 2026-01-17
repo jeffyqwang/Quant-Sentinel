@@ -14,7 +14,7 @@ The user wants to rebuild their backend coding skills.
 
 - **Name**: Quant Sentinel (Generic Trading Engine)
 - **Target**: Universal K-Line Analysis (Decoupled from specific assets).
-- **Stack**: 
+- **Stack**:
   - Core: Node.js, TypeScript, git.
   - Data (Sprint 1): `yahoo-finance2` (Public Market Data).
   - Broker (Future): `Futu OpenD` API (Private User Data & Execution).
@@ -45,12 +45,17 @@ AI must strictly adhere to these custom definitions:
 
 ### [CURRENT] Sprint 1: Infra & Kernel
 
-- **Goal**: Build a decoupled, reusable data pipeline.
+- **Goal**: Build a decoupled, reusable data pipeline with a CLI entry point.
 - **Tasks**:
-  1. Initialize Scaffolding (`npm init`, `tsc`).
-  2. **Architecture Design**: Create a clear separation between `MarketDataProvider` (Generic) and `StrategyEngine` (Logic).
-  3. **Data Cleaning**: Implement a generic `calculateMedianPrice(ohlc)` utility.
-  4. **Verification**: Test the engine using HSTECH data as the case study.
+  1. **Scaffolding**: Initialize project with `pnpm init`, `tsc --init` (ES2022/ESM), and `git init`.
+  2. **Architecture Skeleton**:
+     - Create `src/cli.ts` (The Single Entry Point).
+     - Establish folder structure: `src/core/` (Logic), `src/adapters/` (Data), `src/interfaces/` (Types).
+  3. **Data Core**:
+     - Define `IMarketProvider` interface (Decoupling layer).
+     - Implement `YahooAdapter` using `yahoo-finance2`.
+     - Implement `calculateMedianPrice(ohlc)` utility.
+  4. **Verification**: Configure `pnpm start` to run `tsx src/cli.ts` and successfully print HSTECH data to console.
 
 ### [FUTURE] Sprint 2: Structure & Money Management
 
@@ -70,8 +75,8 @@ AI must strictly adhere to these custom definitions:
 - **Goals**:
   - Fetch Private Data: Sync current holdings and watchlist.
   - Execution: Replace simulated signals with real Order placement.
-- **Architectural Requirement for Sprint 1**: 
-  - Design a generic `IPortfolioProvider` interface now, even if we mock it in Sprint 1. 
+- **Architectural Requirement for Sprint 1**:
+  - Design a generic `IPortfolioProvider` interface now, even if we mock it in Sprint 1.
   - DO NOT assume the strategy always starts with 0 position.
 
 ## 5. Coding Standards
@@ -80,3 +85,8 @@ AI must strictly adhere to these custom definitions:
 - **Style**: Functional preferred, but Pragmatic. Keep it readable.
 - **Architecture**: Modular. Separate `DataLayer`, `StrategyLayer`, and `ExecutionLayer`.
 - **Package Manager**: **pnpm** (Strictly enforced). DO NOT use npm or yarn.
+- **Entry Point Pattern**: `src/cli.ts` is the SINGLE entry point for the application.
+  - All execution logic (even for testing fetchers) must be triggered from here during Sprint 1.
+  - DO NOT create root-level scripts like `test.js` or `run.ts`.
+- **Runtime**: Use `tsx` for executing TypeScript files directly.
+- **Interface First**: Always define an interface (e.g., `IMarketProvider`) before writing the implementation class.
