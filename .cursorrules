@@ -13,75 +13,107 @@ The user wants to rebuild their backend coding skills.
 ## 2. Project Specs
 
 - **Name**: Quant Sentinel (Generic Trading Engine)
-- **Target**: Universal K-Line Analysis (Decoupled from specific assets).
+- **Type**: CLI Application (Not a library)
+- **Target**: Universal K-Line Analysis (Decoupled from specific assets)
 - **Stack**:
-  - Core: Node.js, TypeScript, git.
-  - Data (Sprint 1): `yahoo-finance2` (Public Market Data).
-  - Broker (Future): `Futu OpenD` API (Private User Data & Execution).
-- **Current Phase**: **Sprint 1 - Infrastructure & Generic Kernel**.
+  - Core: Node.js, TypeScript, pnpm, tsx, cac
+  - Data Pipeline:
+    - Sprint 1: `yahoo-finance2` (Public Market Data)
+    - Sprint 2: `PostgreSQL` + `Prisma` (Data Cache)
+    - Sprint 4: `Futu OpenD` (Broker API)
+  - Infrastructure:
+    - Sprint 2: `Docker` (Local Dev Environment)
+    - Sprint 3: Linux VPS + `PM2` (Production)
+- **Current Phase**: **Sprint 1 - Infrastructure & YahooAdapter**
 
-## 3. Core Strategy: System 3.0 (Universal Logic)
+## 3. Core Strategy: System 3.0 & Strategy Lab
 
 The strategy logic must be **agnostic** to the ticker symbol.
 AI must strictly adhere to these custom definitions:
 
-### A. Indicators (Non-Standard)
+### A. Core System: System 3.0 (MACD-Based)
 
-- **Trend Filter**: MA60 (Primary), MA120 (Support).
-- **Oscillator**: **Custom MACD** (NOT Standard 12-26-9).
-  - **Parameters**: **5-13-5** (Configurable, do not hardcode).
-  - **Data Source**: **(High + Low) / 2** (Median Price). **CRITICAL**: Logic must support calculating Median Price from any standard OHLC input.
+- **Trend Filter**: MA60 (Primary), MA120 (Support)
+- **Oscillator**: **Custom MACD** (NOT Standard 12-26-9)
+  - **Parameters**: **5-13-5** (Configurable, do not hardcode)
+  - **Data Source**: **(High + Low) / 2** (Median Price)
+  - **CRITICAL**: Logic must support calculating Median Price from any standard OHLC input
 
-### B. Logic Hierarchy (Abstracted)
+### B. Strategy Lab (Experimental Indicators)
 
-1.  **Strategic Layer (System 2.0)**:
-    - Input: Any K-line Series.
-    - Logic: Price > MA60 = Bullish Zone.
-2.  **Tactical Layer (System 3.0)**:
-    - Timeframe: Multi-timeframe support (e.g., 4H direction + 30m entry).
-    - Patterns: Mode 1 (V-shape), Mode 2 (Divergence).
+| Indicator | Purpose | Status |
+|-----------|---------|--------|
+| **ATR** | Volatility measurement, Position sizing (1% risk rule) | Sprint 1 |
+| **Slope** | Momentum filter, Trend strength confirmation | Sprint 1 |
+| **Fractal** | Structure recognition | Future |
+| **Divergence** | Reversal detection | Future |
 
-## 4. Development Roadmap (Context Awareness)
+### C. Logic Hierarchy
 
-### [CURRENT] Sprint 1: Infra & Kernel
+1. **Strategic Layer (System 2.0)**:
+   - Input: Any K-line Series
+   - Logic: Price > MA60 = Bullish Zone
+2. **Tactical Layer (System 3.0)**:
+   - Timeframe: Multi-timeframe support (e.g., 4H direction + 30m entry)
+   - Patterns: Mode 1 (V-shape), Mode 2 (Divergence)
 
-- **Goal**: Build a decoupled, reusable data pipeline with a CLI entry point.
+### D. Verification Rule
+
+**ALL strategies must pass backtesting before Live deployment.**
+
+## 4. Development Roadmap
+
+### [CURRENT] Sprint 1: Infrastructure & Data Pipeline
+
+- **Goal**: Build decoupled CLI tool with basic data fetching and indicators.
 - **Tasks**:
-  1. **Scaffolding**: Initialize project with `pnpm init`, `tsc --init` (ES2022/ESM), and `git init`.
-  2. **Architecture Skeleton**:
-     - Create `src/cli.ts` (The Single Entry Point).
-     - Establish folder structure: `src/core/` (Logic), `src/adapters/` (Data), `src/interfaces/` (Types).
-  3. **Data Core**:
-     - Define `IMarketProvider` interface (Decoupling layer).
-     - Implement `YahooAdapter` using `yahoo-finance2`.
-     - Implement `calculateMedianPrice(ohlc)` utility.
-  4. **Verification**: Configure `pnpm start` to run `tsx src/cli.ts` and successfully print HSTECH data to console.
+  1. **Scaffolding** ✅: pnpm, TypeScript (ESM), git
+  2. **CLI Entry Point**: `src/cli.ts` using `cac`
+  3. **Data Layer**:
+     - Define `IMarketProvider` interface
+     - Implement `YahooAdapter` (yahoo-finance2)
+     - Implement `calculateMedianPrice(candle)` utility
+  4. **Indicators (Core)**:
+     - `calculateMA(data, period)` - Simple Moving Average
+     - `calculateATR(candles, period)` - Average True Range
+     - `calculateSlope(data, period)` - Momentum/Slope
+  5. **Verification**: `pnpm start fetch --symbol AAPL` prints K-line data
 
-### [FUTURE] Sprint 2: Structure & Money Management
+### [NEXT] Sprint 2: Persistence Layer
 
-- Fractal (Fractal) recognition.
-- Watershed state machine (Support/Resistance flip).
-- R/R Calculator.
+- **Goal**: Introduce data caching to avoid repeated API calls.
+- **Tasks**:
+  - Docker Compose (PostgreSQL + pgAdmin)
+  - Prisma ORM setup
+  - `DbMarketProvider` implementation
+  - Data sync command (`pnpm start sync`)
 
-### [FUTURE] Sprint 3: Precision Strike (System 3.0)
+### [FUTURE] Sprint 3: Backtesting Engine & Ops
 
-- Full 5-13-5 MACD implementation.
-- Pattern Recognition Engine (Mode 1 & 2).
-- Backtesting Engine.
+- **Goal**: Validate strategies with historical data; prepare production.
+- **Tasks**:
+  - Backtesting engine core
+  - `IStrategy` interface
+  - Performance metrics (Sharpe, MaxDrawdown, Win Rate)
+  - Linux VPS setup (Ubuntu)
+  - PM2 process management
 
-### [FUTURE] Sprint 4: Broker Integration (Real World)
+### [FUTURE] Sprint 4: Live Trading & AI
 
-- **Target**: Integrate with **Futu OpenD** (FutuBull).
-- **Goals**:
-  - Fetch Private Data: Sync current holdings and watchlist.
-  - Execution: Replace simulated signals with real Order placement.
-- **Architectural Requirement for Sprint 1**:
-  - Design a generic `IPortfolioProvider` interface now, even if we mock it in Sprint 1.
-  - DO NOT assume the strategy always starts with 0 position.
+- **Goal**: Connect to real broker; add AI-assisted analysis.
+- **Tasks**:
+  - Futu OpenD integration
+  - `FutuAdapter` implementation
+  - Order execution module
+  - Portfolio sync (Holdings, Watchlist)
+  - AI analysis integration (LLM for sentiment)
+- **Architectural Note**:
+  - Design `IPortfolioProvider` interface early
+  - DO NOT assume strategy always starts with 0 position
 
 ## 5. Coding Standards
 
-- **Language**: TypeScript (Strict Mode).
+- **Language**: TypeScript (Strict Mode)
 - **Style**: Functional preferred, but Pragmatic. Keep it readable.
 - **Architecture**: Modular. Separate `DataLayer`, `StrategyLayer`, and `ExecutionLayer`.
 - **Package Manager**: **pnpm** (Strictly enforced). DO NOT use npm or yarn.
@@ -90,3 +122,11 @@ AI must strictly adhere to these custom definitions:
   - DO NOT create root-level scripts like `test.js` or `run.ts`.
 - **Runtime**: Use `tsx` for executing TypeScript files directly.
 - **Interface First**: Always define an interface (e.g., `IMarketProvider`) before writing the implementation class.
+
+## 6. Documentation
+
+- **Docs Location**: `docs/` folder
+- **Key Files**:
+  - `docs/ROADMAP.md` - Development phases and tasks
+  - `docs/STRATEGY_LAB.md` - Strategy research and experiments
+  - `docs/ARCHITECTURE.md` - System design and patterns
